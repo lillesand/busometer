@@ -23,7 +23,7 @@ public class LedController {
     }
 
     public void showNumber(int number) {
-        setAllLow();
+        disableAllLeds();
         if (number > outputPins.size()) {
             number = outputPins.size();
         }
@@ -33,7 +33,7 @@ public class LedController {
         }
     }
 
-    private void setAllLow() {
+    public void disableAllLeds() {
         for (GpioPinDigitalOutput outputPin : outputPins) {
             outputPin.setState(PinState.LOW);
         }

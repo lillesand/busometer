@@ -27,6 +27,7 @@ public class RuterService {
             HttpResponse response = new AutoRetryHttpClient().execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3010441"));
             InputStream inputStream = response.getEntity().getContent();
 
+            //noinspection unchecked
             List<BusDepartureDto> departureDtos = (List<BusDepartureDto>) mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
 
             return new UpcomingDepartureToDowntown(departureDtos);

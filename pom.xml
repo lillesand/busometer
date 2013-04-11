@@ -90,7 +90,7 @@
                   <transformers>
                     <transformer
                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                      <mainClass>no.bekk.busfetcher.BusTimeLedEmitter</mainClass>
+                      <mainClass>no.bekk.busfetcher.Main</mainClass>
                     </transformer>
                   </transformers>
                 </configuration>

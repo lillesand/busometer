@@ -15,17 +15,12 @@ public class BusTimeLedEmitter {
     }
 
     public void showTimeToNextDepartureInMinutesOnLed() {
+        ledController.disableAllLeds();
         UpcomingDepartureToDowntown upcomingDepartureToDowntown = ruterService.fetchRealtimeInformation();
         int waitingTimeInMinutes = upcomingDepartureToDowntown.getWaitingTimeInMinutes();
 
         System.out.println(upcomingDepartureToDowntown);
         ledController.showNumber(waitingTimeInMinutes);
-    }
-
-    public static void main(String[] args) {
-        BusTimeLedEmitter busTimeLedEmitter = new BusTimeLedEmitter();
-
-        busTimeLedEmitter.showTimeToNextDepartureInMinutesOnLed();
     }
 
 }
