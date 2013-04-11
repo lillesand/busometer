@@ -28,7 +28,7 @@ public class RuterService {
             InputStream inputStream = response.getEntity().getContent();
 
             List<BusDepartureDto> departureDtos = (List<BusDepartureDto>) mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
-            System.out.println(departureDtos);
+
             return new UpcomingDepartureToDowntown(departureDtos);
         } catch (IOException e) {
             throw new RuterException(e);

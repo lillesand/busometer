@@ -4,7 +4,7 @@ import no.bekk.busfetcher.ruter.RuterService;
 import no.bekk.busfetcher.ruter.UpcomingDepartureToDowntown;
 import org.junit.Test;
 
-public class RuterServiceTest {
+public class RuterServiceIntegrationTest {
 
     @Test
     public void test() {

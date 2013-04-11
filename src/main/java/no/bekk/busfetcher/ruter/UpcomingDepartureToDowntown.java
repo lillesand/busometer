@@ -1,12 +1,14 @@
 package no.bekk.busfetcher.ruter;
 
 import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 
 import java.util.List;
 
 public class UpcomingDepartureToDowntown {
 
     public static final String DOWNTOWN_DIRECTION_NAME = "2";
+
     private final DateTime expectedDepartureTime;
 
     public UpcomingDepartureToDowntown(List<BusDepartureDto> departureDtos) {
@@ -25,6 +27,12 @@ public class UpcomingDepartureToDowntown {
 
     @Override
     public String toString() {
-        return expectedDepartureTime.toString();
+        return String.format("Next departure is in %s minutes, at %s", getWaitingTimeInMinutes(), expectedDepartureTime.toLocalTime());
     }
+
+    public int getWaitingTimeInMinutes() {
+        DateTime now = new DateTime();
+        return Minutes.minutesBetween(now, this.expectedDepartureTime).getMinutes();
+    }
+
 }
