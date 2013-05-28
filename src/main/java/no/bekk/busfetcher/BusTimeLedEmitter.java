@@ -1,5 +1,7 @@
 package no.bekk.busfetcher;
 
+import static java.lang.Runtime.getRuntime;
+
 import no.bekk.busfetcher.raspi.LedController;
 import no.bekk.busfetcher.ruter.RuterService;
 import no.bekk.busfetcher.ruter.UpcomingDepartureToDowntown;
@@ -16,6 +18,13 @@ public class BusTimeLedEmitter {
         ruterService = new RuterService();
         ledController = new LedController();
         nextCheckScheduler = NextCheckScheduler.getInstance();
+
+		getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				ledController.disableAllLeds();
+			}
+		});
     }
 
     public void showTimeToNextDepartureInMinutesOnLed() {
@@ -32,9 +41,6 @@ public class BusTimeLedEmitter {
 		catch (RuntimeException e) {
 			ledController.showError();
 		}
-
-
-
     }
 
 }
