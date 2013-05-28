@@ -45,7 +45,7 @@ public class LedController {
 
 	public void showError() {
 		for (GpioPinDigitalOutput outputPin : outputPins) {
-			outputPin.pulse(2000);
+			outputPin.blink(2000);
 		}
 	}
 }
