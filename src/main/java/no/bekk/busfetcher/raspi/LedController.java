@@ -1,10 +1,14 @@
 package no.bekk.busfetcher.raspi;
 
-import com.pi4j.io.gpio.*;
+import static java.util.Arrays.asList;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 
 public class LedController {
 
@@ -38,4 +42,10 @@ public class LedController {
             outputPin.setState(PinState.LOW);
         }
     }
+
+	public void showError() {
+		for (GpioPinDigitalOutput outputPin : outputPins) {
+			outputPin.pulse(2000);
+		}
+	}
 }

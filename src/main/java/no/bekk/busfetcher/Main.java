@@ -1,14 +1,15 @@
 package no.bekk.busfetcher;
 
-import no.bekk.busfetcher.scheduler.NextCheckScheduler;
-
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+import no.bekk.busfetcher.scheduler.NextCheckScheduler;
+import no.bekk.busfetcher.util.Logger;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Lets go!");
+        Logger.log("Lets go!");
         runEternally();
     }
 
@@ -21,15 +22,15 @@ public class Main {
             }
             catch (RuntimeException e) {
                 scheduler.storeError();
-                System.out.println("ERROR: Caught a " + e.getClass() + " because " + e.getMessage());
+                Logger.log("ERROR: Caught a " + e.getClass() + " because " + e.getMessage());
             }
 
             try {
                 long millisToSleep = scheduler.getMillisToSleepBeforeNextCheck();
-                System.out.println(String.format("Sleeping %s minutes (%s seconds) before checking again.", MILLISECONDS.toMinutes(millisToSleep), MILLISECONDS.toSeconds(millisToSleep)));
+				Logger.log(String.format("Sleeping %s minutes (%s seconds) before checking again.", MILLISECONDS.toMinutes(millisToSleep), MILLISECONDS.toSeconds(millisToSleep)));
                 sleep(millisToSleep);
             } catch (InterruptedException e) {
-                System.out.println("ERROR: Got interrupted while sleeping: " + e.getMessage());
+				Logger.log("ERROR: Got interrupted while sleeping: " + e.getMessage());
             }
         }
     }

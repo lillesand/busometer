@@ -23,7 +23,7 @@ public class NextCheckScheduler {
         }
 
         if (lastWaitingTimeInMinutes > 8) {
-            // Sleep until there are 7 minutes till it should be there. Allows for 3 minutes deviation
+            // Sleep until there are 8 minutes till it should be there. Allows for 3 minutes deviation
             return MINUTES.toMillis(lastWaitingTimeInMinutes - 8);
         }
 
