@@ -40,6 +40,7 @@ public class BusTimeLedEmitter {
 		}
 		catch (RuntimeException e) {
 			ledController.showError();
+			throw e;
 		}
     }
 
