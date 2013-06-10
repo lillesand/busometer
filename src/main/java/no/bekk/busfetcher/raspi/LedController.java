@@ -38,14 +38,20 @@ public class LedController {
     }
 
     public void disableAllLeds() {
+		// Disable any blinking
+		blinkAll(0);
         for (GpioPinDigitalOutput outputPin : outputPins) {
             outputPin.setState(PinState.LOW);
         }
     }
 
 	public void showError() {
+		blinkAll(2000);
+	}
+
+	private void blinkAll(final int delay) {
 		for (GpioPinDigitalOutput outputPin : outputPins) {
-			outputPin.blink(2000);
+			outputPin.blink(delay);
 		}
 	}
 }
