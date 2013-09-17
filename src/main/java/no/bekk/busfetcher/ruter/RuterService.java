@@ -1,9 +1,5 @@
 package no.bekk.busfetcher.ruter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +8,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.AutoRetryHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 public class RuterService {
 
@@ -34,7 +34,7 @@ public class RuterService {
             InputStream inputStream = response.getEntity().getContent();
 
             //noinspection unchecked
-            List<BusDepartureDto> departureDtos = (List<BusDepartureDto>) mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
+            List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
 
             return new UpcomingDepartureToDowntown(departureDtos);
         } catch (IOException e) {

@@ -1,4 +1,4 @@
-package no.bekk;
+package no.bekk.misc;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;

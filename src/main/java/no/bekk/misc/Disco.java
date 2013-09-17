@@ -1,4 +1,4 @@
-package no.bekk;
+package no.bekk.misc;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -13,8 +13,6 @@ import com.pi4j.io.gpio.RaspiPin;
 public class Disco
 {
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("Let's rooooll!");
-
         GpioController gpioController = GpioFactory.getInstance();
 
         GpioPinDigitalOutput pin0 = gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_00, "IO0", PinState.LOW);
