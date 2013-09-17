@@ -86,11 +86,11 @@
                   <goal>shade</goal>
                 </goals>
                 <configuration>
-                  <finalName>busfetcher-jar-with-dependencies</finalName>
+                  <finalName>busometer-with-dependencies</finalName>
                   <transformers>
                     <transformer
                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                      <mainClass>no.bekk.busfetcher.Main</mainClass>
+                      <mainClass>no.bekk.Main</mainClass>
                     </transformer>
                   </transformers>
                 </configuration>

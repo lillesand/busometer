@@ -1,18 +1,12 @@
 package no.bekk.busfetcher;
 
-import static java.lang.Thread.sleep;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 import no.bekk.busfetcher.scheduler.NextCheckScheduler;
 import no.bekk.busfetcher.util.Logger;
 
-public class Main {
+import static java.lang.Thread.sleep;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-    public static void main(String[] args) {
-        Logger.log("Lets go!");
-        runEternally();
-    }
-
+public class BusFetcherMain {
     public static void runEternally() {
         BusTimeLedEmitter busTimeLedEmitter = new BusTimeLedEmitter();
         NextCheckScheduler scheduler = NextCheckScheduler.getInstance();
