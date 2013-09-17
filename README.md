@@ -26,7 +26,7 @@ Følg deretter instruksjonene for å [legge inn PI4J](http://pi4j.com/install.ht
 
 Koble opp breadboard med motstander og LEDs, som vist på bildet under.
 
-![breadboard koblinger]()
+![breadboard koblinger](https://raw.github.com/lillesand/raspberry-pi/f6d3045bb3f09bd20b84961c47f444130161de19/img/breadboard.jpg)
 
 Der koblingene er gjort som følger i henhold til [Raspberry Pi sin GPIO](http://pi4j.com/images/p1header-large.png):
 
@@ -72,8 +72,8 @@ iface eth0 inet dhcp
 
 allow-hotplug wlan0
 iface wlan0 inet dhcp
-  wpa-ssid <<ssid>>
-  wpa-psk <<wpa-passord>>
+  wpa-ssid --ssid--
+  wpa-psk --wpa-passord--
 
 iface default inet dhcp
 </pre>
