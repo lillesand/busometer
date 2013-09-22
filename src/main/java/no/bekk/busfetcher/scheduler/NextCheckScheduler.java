@@ -1,9 +1,16 @@
 package no.bekk.busfetcher.scheduler;
 
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.LocalTime;
+
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class NextCheckScheduler {
+
+    public static final DateTime START_OF_EXCEPTED_NO_BUS_TIME = new LocalTime(0, 0).toDateTimeToday();
+    public static final DateTime END_OF_EXPECTED_NO_BUS_TIME = new LocalTime(5, 0).toDateTimeToday();
 
     private static NextCheckScheduler instance;
     private Integer lastWaitingTimeInMinutes;
@@ -17,9 +24,15 @@ public class NextCheckScheduler {
     }
 
     public synchronized long getMillisToSleepBeforeNextCheck() {
+        Interval noBusInterval = new Interval(START_OF_EXCEPTED_NO_BUS_TIME, END_OF_EXPECTED_NO_BUS_TIME);
         if (lastWaitingTimeInMinutes == null) {
-            // Last lookup failed, let's not over-do it
-            return MINUTES.toMillis(10);
+            // Last lookup failed
+
+            if (noBusInterval.containsNow()) {
+                return MINUTES.toMillis(10);
+            }
+
+            return MINUTES.toMillis(2);
         }
 
         if (lastWaitingTimeInMinutes > 8) {
