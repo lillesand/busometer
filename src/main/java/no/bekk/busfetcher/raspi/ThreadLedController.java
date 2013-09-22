@@ -5,6 +5,7 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import no.bekk.busfetcher.util.Logger;
 
 import java.util.List;
 
@@ -70,8 +71,12 @@ class ThreadLedController implements Runnable {
                         danceLedsOnce();
                     }
                 }
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 // That's okay
+            }
+            catch (RuntimeException e) {
+                Logger.log("Caught " + e.getClass() + " while trying to control lights. Cause: " + e.getMessage());
             }
         }
 
