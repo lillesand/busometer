@@ -61,6 +61,7 @@ class ThreadLedController implements Runnable {
             try {
                 synchronized (outputPins) {
                     if (number != null && !number.equals(previousNumber)) {
+                        previousNumber = number;
                         lightConsecutiveLeds(number);
                         Thread.sleep(500);
                     }
