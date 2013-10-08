@@ -16,8 +16,7 @@ class ThreadLedController implements Runnable {
     private final List<GpioPinDigitalOutput> outputPins;
 
     private boolean running;
-    private boolean error;
-    private Integer number;
+    private LedPattern ledPattern;
 
     public ThreadLedController() {
         GpioController gpioController = GpioFactory.getInstance();
@@ -30,47 +29,40 @@ class ThreadLedController implements Runnable {
                 gpioController.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.LOW)
         );
 
+        this.ledPattern = new DancingLedPattern(outputPins);
         this.running = true;
     }
 
     public void stopRunning() {
         synchronized (outputPins) {
             this.running = false;
-            disableAllLeds();
+            this.ledPattern.disableAllLeds();
         }
     }
 
     public void showError() {
         synchronized (outputPins) {
-            this.number = null;
-            this.error = true;
+            this.ledPattern = new DancingLedPattern(outputPins);
         }
     }
 
     public void showNumber(int number) {
         synchronized (outputPins) {
-            this.error = false;
-            this.number = number;
+            NumberLedsPattern newPattern = new NumberLedsPattern(outputPins, number);
+            if (!newPattern.equals(this.ledPattern)) {
+                this.ledPattern = newPattern;
+
+            }
         }
     }
 
     @Override
     public void run() {
-        Integer previousNumber = number;
         while (running) {
             try {
                 synchronized (outputPins) {
-                    if (number != null && !number.equals(previousNumber)) {
-                        previousNumber = number;
-                        lightConsecutiveLeds(number);
-                        Thread.sleep(500);
-                    }
-                    else if (error) {
-                        danceLedsOnce();
-                    }
-                    else {
-                        danceLedsOnce();
-                    }
+                    this.ledPattern.render();
+                    Thread.sleep(this.ledPattern.getRenderLoopDelayMs());
                 }
             }
             catch (InterruptedException e) {
@@ -81,40 +73,7 @@ class ThreadLedController implements Runnable {
             }
         }
 
-        disableAllLeds();
-    }
-
-    private void danceLedsOnce() throws InterruptedException {
-        for (int i = 0; i < outputPins.size(); i++) {
-            Thread.sleep(300);
-            disableAllLeds();
-            outputPins.get(i).setState(PinState.HIGH);
-        }
-
-        // Runs from 2nd to 4th pin, as 1st and 5th are lit by the previous loop
-        int fourthPin = outputPins.size() - 2;
-        for (int i = fourthPin; i >= 1; i--) {
-            Thread.sleep(300);
-            disableAllLeds();
-            outputPins.get(i).setState(PinState.HIGH);
-        }
-    }
-
-    private void disableAllLeds() {
-        for (GpioPinDigitalOutput outputPin : outputPins) {
-            outputPin.setState(PinState.LOW);
-        }
-    }
-
-    private void lightConsecutiveLeds(int number) {
-        disableAllLeds();
-        if (number > outputPins.size()) {
-            number = outputPins.size();
-        }
-
-        for (int i = 0; i < number; i++) {
-            outputPins.get(i).setState(PinState.HIGH);
-        }
+        this.ledPattern.disableAllLeds();
     }
 
 }
