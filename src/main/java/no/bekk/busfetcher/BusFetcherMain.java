@@ -12,6 +12,7 @@ public class BusFetcherMain {
         NextCheckScheduler scheduler = NextCheckScheduler.getInstance();
         while (true) {
             try {
+                Logger.log("Sleep done! Checking again.");
                 busTimeLedEmitter.showTimeToNextDepartureInMinutesOnLed();
             }
             catch (RuntimeException e) {

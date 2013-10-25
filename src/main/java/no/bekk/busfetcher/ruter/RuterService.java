@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import no.bekk.busfetcher.util.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.AutoRetryHttpClient;
@@ -29,16 +30,29 @@ public class RuterService {
 	}
 
     public UpcomingDepartureToDowntown fetchRealtimeInformation() {
+
+        InputStream inputStream = null;
         try {
             HttpResponse response = httpClient.execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3010441"));
-            InputStream inputStream = response.getEntity().getContent();
+            inputStream = response.getEntity().getContent();
 
             //noinspection unchecked
             List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
 
             return new UpcomingDepartureToDowntown(departureDtos);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuterException(e);
+        }
+        finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                }
+                catch (IOException e) {
+                    Logger.log("Couldn't close stream because " + e.getClass() + " " + e.getMessage());
+                }
+            }
         }
     }
 
