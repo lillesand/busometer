@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 public class Logger {
 
 	public static void log(Object message) {
-		System.out.println(new DateTime().toString("yyyy-MM-dd HHmm: ") + message);
+		System.out.println(new DateTime().toString("yyyy-MM-dd HHmmss: ") + message);
 	}
 
 }

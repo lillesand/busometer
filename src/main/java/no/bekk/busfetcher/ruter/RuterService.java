@@ -33,11 +33,13 @@ public class RuterService {
 
         InputStream inputStream = null;
         try {
+            Logger.log("Calling Ruter");
             HttpResponse response = httpClient.execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3010441"));
             inputStream = response.getEntity().getContent();
 
             //noinspection unchecked
             List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
+            Logger.log("Read response");
 
             return new UpcomingDepartureToDowntown(departureDtos);
         }

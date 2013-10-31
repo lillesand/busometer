@@ -16,7 +16,7 @@ public class NumberLedsPattern extends LedPattern {
     }
 
     @Override
-    void render() throws InterruptedException {
+    void render() {
         if (numberRendered) {
             return;
         }

@@ -34,25 +34,18 @@ class ThreadLedController implements Runnable {
     }
 
     public void stopRunning() {
-        synchronized (outputPins) {
-            this.running = false;
-            this.ledPattern.disableAllLeds();
-        }
+        this.running = false;
     }
 
     public void showError() {
-        synchronized (outputPins) {
-            this.ledPattern = new DancingLedPattern(outputPins);
-        }
+        this.ledPattern = new DancingLedPattern(outputPins);
     }
 
     public void showNumber(int number) {
-        synchronized (outputPins) {
-            NumberLedsPattern newPattern = new NumberLedsPattern(outputPins, number);
-            if (!newPattern.equals(this.ledPattern)) {
-                this.ledPattern = newPattern;
+        NumberLedsPattern newPattern = new NumberLedsPattern(outputPins, number);
+        if (!newPattern.equals(this.ledPattern)) {
+            this.ledPattern = newPattern;
 
-            }
         }
     }
 
@@ -60,10 +53,8 @@ class ThreadLedController implements Runnable {
     public void run() {
         while (running) {
             try {
-                synchronized (outputPins) {
-                    this.ledPattern.render();
-                    Thread.sleep(this.ledPattern.getRenderLoopDelayMs());
-                }
+                this.ledPattern.render();
+                Thread.sleep(this.ledPattern.getRenderLoopDelayMs());
             }
             catch (InterruptedException e) {
                 // That's okay
@@ -73,7 +64,7 @@ class ThreadLedController implements Runnable {
             }
         }
 
-        this.ledPattern.disableAllLeds();
+        new NumberLedsPattern(outputPins, 0).render();
     }
 
 }
