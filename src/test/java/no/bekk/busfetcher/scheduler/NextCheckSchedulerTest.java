@@ -1,5 +1,7 @@
 package no.bekk.busfetcher.scheduler;
 
+import org.joda.time.DateTimeUtils;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +19,34 @@ public class NextCheckSchedulerTest {
     }
 
     @Test
-    public void should_always_wait_10_minutes_when_last_was_error() {
+    public void should_wait_two_minutes_on_error_during_the_day() {
+        long tenPastFiveInTheMorning = new LocalTime(5, 10).toDateTimeToday().getMillis();
+        DateTimeUtils.setCurrentMillisFixed(tenPastFiveInTheMorning);
+
+        sut.storeError();
+
+        long millis = sut.getMillisToSleepBeforeNextCheck();
+
+        assertEquals(2, TimeUnit.MINUTES.convert(millis, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void should_wait_10_minutes_when_last_was_error_and_it_is_late_at_night() {
+        long tenPastMidnight = new LocalTime(0, 10).toDateTimeToday().getMillis();
+        DateTimeUtils.setCurrentMillisFixed(tenPastMidnight);
+
+        sut.storeError();
+
+        long millis = sut.getMillisToSleepBeforeNextCheck();
+
+        assertEquals(10, TimeUnit.MINUTES.convert(millis, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void should_wait_10_minutes_when_last_was_error_and_it_is_early_morning() {
+        long tenToFiveInTheMorning = new LocalTime(4, 50).toDateTimeToday().getMillis();
+        DateTimeUtils.setCurrentMillisFixed(tenToFiveInTheMorning);
+
         sut.storeError();
 
         long millis = sut.getMillisToSleepBeforeNextCheck();
