@@ -63,8 +63,6 @@ class ThreadLedController implements Runnable {
                 Logger.log("Caught " + e.getClass() + " while trying to control lights. Cause: " + e.getMessage());
             }
         }
-
-        new NumberLedsPattern(outputPins, 0).render();
     }
 
 }
