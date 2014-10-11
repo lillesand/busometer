@@ -25,7 +25,7 @@ public class RuterService {
         mapper.setPropertyNamingStrategy(new PropertyNamingStrategy.PascalCaseStrategy());
 
 		httpClient = new AutoRetryHttpClient();
-		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 0000);
+		httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 2000);
 		httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 20000);
 	}
 
