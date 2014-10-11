@@ -12,7 +12,9 @@ class BusDepartureDto {
      */
     private String ExpectedDepartureTime;
 
-    private String DestinationName, DirectionName;
+    private String DestinationName, // Bygdøy
+            DirectionName, // 2
+            PublishedLineName; // 30
 
     public DateTime getExpectedDepartureTime() {
         return dateTime(ExpectedDepartureTime);
@@ -36,6 +38,14 @@ class BusDepartureDto {
 
     public void setDirectionName(String directionName) {
         DirectionName = directionName;
+    }
+
+    public String getPublishedLineName() {
+        return PublishedLineName;
+    }
+
+    public void setPublishedLineName(String publishedLineName) {
+        PublishedLineName = publishedLineName;
     }
 
     private DateTime dateTime(String aimedDepartureTime) {
