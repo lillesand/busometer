@@ -5,21 +5,26 @@ import no.bekk.busfetcher.ruter.RuterService;
 import no.bekk.busfetcher.ruter.UpcomingDepartureToDowntown;
 import no.bekk.busfetcher.scheduler.NextCheckScheduler;
 import no.bekk.busfetcher.util.Logger;
+import no.bekk.busfetcher.wifi.Wifi;
 
 public class BusTimeLedEmitter {
 
-    private final LedController ledController;
-    private final RuterService ruterService;
-    private final NextCheckScheduler nextCheckScheduler;
+	private final LedController ledController;
+	private final RuterService ruterService;
+	private final NextCheckScheduler nextCheckScheduler;
+	private final Wifi wifi;
 
-    public BusTimeLedEmitter() {
+	public BusTimeLedEmitter() {
+		wifi = new Wifi();
         ruterService = new RuterService();
         ledController = new LedController();
         nextCheckScheduler = NextCheckScheduler.getInstance();
     }
 
     public void showTimeToNextDepartureInMinutesOnLed() {
-        ledController.disableAllLeds();
+		ledController.disableAllLeds();
+		wifi.verifyUp();
+
 		try {
 			UpcomingDepartureToDowntown upcomingDepartureToDowntown = ruterService.fetchRealtimeInformation();
 
