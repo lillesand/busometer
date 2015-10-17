@@ -35,7 +35,7 @@ public class BusTimeLedEmitter {
 			ledController.showNumber(waitingTimeInMinutes);
 		}
 		catch (RuntimeException e) {
-			ledController.showError();
+			ledController.showError(e);
 			throw e;
 		}
     }

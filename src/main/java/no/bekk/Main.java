@@ -18,7 +18,7 @@ public class Main {
             Thread.sleep(5000);
 
             Logger.log("Error");
-            ledController.showError();
+            ledController.test();
             Thread.sleep(5000);
 
             Logger.log("Number 4");

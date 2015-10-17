@@ -16,7 +16,7 @@ public class BusFetcherMain {
                 busTimeLedEmitter.showTimeToNextDepartureInMinutesOnLed();
             }
             catch (RuntimeException e) {
-                scheduler.storeError();
+                scheduler.storeError(e);
                 Logger.log("ERROR: Caught a " + e.getClass() + " because " + e.getMessage());
             }
 

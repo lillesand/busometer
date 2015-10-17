@@ -1,8 +1,11 @@
 package no.bekk.busfetcher.scheduler;
 
+import no.bekk.busfetcher.ruter.RuterIOException;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
+
+import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -14,13 +17,16 @@ public class NextCheckScheduler {
 
     private static NextCheckScheduler instance;
     private Integer lastWaitingTimeInMinutes;
+    private Exception lastException;
 
     public synchronized void storePreviousWaitingTimeInMinutes(int waitingTimeInMinutes) {
         this.lastWaitingTimeInMinutes = waitingTimeInMinutes;
+        this.lastException = null;
     }
 
-    public synchronized void storeError() {
-       this.lastWaitingTimeInMinutes = null;
+    public synchronized void storeError(Exception e) {
+        this.lastException = e;
+        this.lastWaitingTimeInMinutes = null;
     }
 
     public synchronized long getMillisToSleepBeforeNextCheck() {
@@ -29,25 +35,32 @@ public class NextCheckScheduler {
             // Last lookup failed
 
             if (noBusInterval.containsNow()) {
-                return MINUTES.toMillis(10);
+                return t(10, MINUTES);
             }
 
-            return MINUTES.toMillis(2);
+            if (lastException instanceof RuterIOException) {
+                // Couldn't connect to Ruter on last attempt. Retry more aggressively.
+                return t(30, SECONDS);
+            }
+
+            return t(2, MINUTES);
         }
 
         if (lastWaitingTimeInMinutes > 8) {
-            // Sleep until there are 8 minutes till it should be there. Allows for 3 minutes deviation
-            return MINUTES.toMillis(lastWaitingTimeInMinutes - 8);
+            // Sleep until there are 8 minutes till it should be there. Allows for 3 minutes deviation (as we have 5 LEDs)
+            return t(lastWaitingTimeInMinutes - 8, MINUTES);
         }
 
         if (lastWaitingTimeInMinutes > 5) {
-            return MINUTES.toMillis(1);
+            return t(1, MINUTES);
         }
 
-        return SECONDS.toMillis(30);
+        return t(30, SECONDS);
     }
 
-
+    private long t(int time, TimeUnit unit) {
+        return unit.toMillis(time);
+    }
 
     private NextCheckScheduler() { }
 

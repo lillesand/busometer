@@ -1,10 +1,13 @@
 package no.bekk.busfetcher.scheduler;
 
+import no.bekk.busfetcher.ruter.RuterIOException;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.LocalTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
@@ -18,12 +21,17 @@ public class NextCheckSchedulerTest {
         sut = NextCheckScheduler.getInstance();
     }
 
+    @After
+    public void cleanUp() {
+        DateTimeUtils.setCurrentMillisSystem();
+    }
+
     @Test
     public void should_wait_two_minutes_on_error_during_the_day() {
         long tenPastFiveInTheMorning = new LocalTime(5, 10).toDateTimeToday().getMillis();
         DateTimeUtils.setCurrentMillisFixed(tenPastFiveInTheMorning);
 
-        sut.storeError();
+        sut.storeError(new RuntimeException());
 
         long millis = sut.getMillisToSleepBeforeNextCheck();
 
@@ -35,7 +43,7 @@ public class NextCheckSchedulerTest {
         long tenPastMidnight = new LocalTime(0, 10).toDateTimeToday().getMillis();
         DateTimeUtils.setCurrentMillisFixed(tenPastMidnight);
 
-        sut.storeError();
+        sut.storeError(new RuntimeException());
 
         long millis = sut.getMillisToSleepBeforeNextCheck();
 
@@ -47,11 +55,24 @@ public class NextCheckSchedulerTest {
         long tenToFiveInTheMorning = new LocalTime(4, 50).toDateTimeToday().getMillis();
         DateTimeUtils.setCurrentMillisFixed(tenToFiveInTheMorning);
 
-        sut.storeError();
+        sut.storeError(new RuntimeException());
 
         long millis = sut.getMillisToSleepBeforeNextCheck();
 
         assertEquals(10, TimeUnit.MINUTES.convert(millis, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void should_wait_30_seconds_on_io_exception_during_the_day() {
+        // Indicates connection problems to Ruter, most frequently due to poor wifi conncetion.
+        long tenPastNoon = new LocalTime(12, 10).toDateTimeToday().getMillis();
+        DateTimeUtils.setCurrentMillisFixed(tenPastNoon);
+
+        sut.storeError(new RuterIOException(new IOException()));
+
+        long millis = sut.getMillisToSleepBeforeNextCheck();
+
+        assertEquals(30, TimeUnit.SECONDS.convert(millis, TimeUnit.MILLISECONDS));
     }
 
     @Test
