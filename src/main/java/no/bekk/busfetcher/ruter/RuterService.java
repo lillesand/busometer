@@ -30,31 +30,19 @@ public class RuterService {
 	}
 
     public UpcomingDepartureToDowntown fetchRealtimeInformation() {
-
-        InputStream inputStream = null;
         try {
             Logger.log("Calling Ruter");
             HttpResponse response = httpClient.execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3010441"));
-            inputStream = response.getEntity().getContent();
 
-            //noinspection unchecked
-            List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
-            Logger.log("Read response");
+            try (InputStream inputStream = response.getEntity().getContent()) {
+                List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });
+                Logger.log("Read response");
 
-            return new UpcomingDepartureToDowntown(departureDtos);
+                return new UpcomingDepartureToDowntown(departureDtos);
+            }
         }
         catch (IOException e) {
-            throw new RuterException(e);
-        }
-        finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                }
-                catch (IOException e) {
-                    Logger.log("Couldn't close stream because " + e.getClass() + " " + e.getMessage());
-                }
-            }
+            throw new RuterIOException(e);
         }
     }
 

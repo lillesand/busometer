@@ -28,7 +28,7 @@ public class UpcomingDepartureToDowntown {
                 .min(Comparator.comparing(BusDepartureDto::getExpectedDepartureTime));
 
         if (!firstDepartingBus.isPresent()) {
-            throw new RuterException("Couldn't find bus in right direction: " + DOWNTOWN_DIRECTION_NAME + ". Departures: " + departureDtos);
+            throw new NoBusAvailableException("Couldn't find bus in right direction: " + DOWNTOWN_DIRECTION_NAME + ". Departures: " + departureDtos);
         }
         else {
             return firstDepartingBus.get().getExpectedDepartureTime();

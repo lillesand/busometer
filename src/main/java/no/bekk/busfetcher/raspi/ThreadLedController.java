@@ -37,8 +37,12 @@ class ThreadLedController implements Runnable {
         this.running = false;
     }
 
-    public void showError() {
+    public void dancingLeds() {
         this.ledPattern = new DancingLedPattern(outputPins);
+    }
+
+    public void blinkLeds() {
+        this.ledPattern = new BlinkingLedPattern(outputPins);
     }
 
     public void showNumber(int number) {

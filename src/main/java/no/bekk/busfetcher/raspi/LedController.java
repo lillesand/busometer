@@ -1,5 +1,7 @@
 package no.bekk.busfetcher.raspi;
 
+import no.bekk.busfetcher.ruter.NoBusAvailableException;
+
 public class LedController {
 
     private ThreadLedController ledControllerThread;
@@ -18,8 +20,13 @@ public class LedController {
     }
 
 
-	public void showError() {
-        ledControllerThread.showError();
+    public void showError(Exception e) {
+        if (e instanceof NoBusAvailableException) {
+			ledControllerThread.dancingLeds();
+		}
+		else {
+			ledControllerThread.blinkLeds();
+		}
 	}
 
     public void showNumber(int number) {
@@ -30,9 +37,12 @@ public class LedController {
         ledControllerThread.showNumber(0);
     }
 
+	public void test() {
+		ledControllerThread.dancingLeds();
+	}
+
     public void stop() {
         ledControllerThread.stopRunning();
     }
-
 
 }
