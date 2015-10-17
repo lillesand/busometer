@@ -130,3 +130,57 @@ Trykk så ```ctrl-a``` etterfulgt av ```d``` for å koble fra screenen. Hvis du 
 ```
 screen -r
 ```
+
+Stabilisering av Wifi
+---------------------
+
+Jeg har hatt en del problemer med å få Wifi til å kjøre stabilt på Pien, men har etter sigende fått det til å fungere decent.
+
+Installer scriptet under i `/usr/local/bin`:
+
+```
+##################################################################
+# Settings
+# Which Interface do you want to check/fix
+wlan='wlan0'
+##################################################################
+
+echo "Performing Network check for $wlan"
+if ifconfig $wlan | grep -q "inet addr:" ; then
+    echo "Network is Okay"
+else
+    echo "Network connection down! Attempting reconnection."
+    sudo ifdown $wlan
+    sleep 5
+    sudo ifup --force $wlan
+    ifconfig $wlan | grep "inet addr"
+fi
+
+echo
+echo "Current Setting:"
+ifconfig $wlan | grep "inet addr:"
+echo
+
+exit 0
+```
+
+Busometer-koden vil kjøre scriptet før hvert kall mot Ruter for å sikre at den har nett.
+
+I tillegg har jeg satt opp en cronjob som kjører scriptet hvert femte minutt for å redusere sjansen for at RasPien faller av nett og må restartes hvis Busometeret ikke kjører.
+
+`sudo crontab -e`:
+
+```
+*/5 * * * * /usr/local/bin/wifi_check
+```
+
+Stabilisering av Pi
+-------------------
+
+Det viser seg at det er noen problems med USB-driveren i gammel versjon av firmwaren til Raspberry Pi som gjør at den av og til må restartes for å få liv i Wifi-dongelen.
+
+Å oppdatere firmwaren er easy peasy:
+
+```
+sudo rpi-update
+```
