@@ -32,7 +32,7 @@ public class RuterService {
     public UpcomingDepartureToDowntown fetchRealtimeInformation() {
         try {
             Logger.log("Calling Ruter");
-            HttpResponse response = httpClient.execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3010441"));
+            HttpResponse response = httpClient.execute(new HttpGet("http://reis.trafikanten.no/reisrest/realtime/getrealtimedata/3012130"));
 
             try (InputStream inputStream = response.getEntity().getContent()) {
                 List<BusDepartureDto> departureDtos = mapper.readValue(inputStream, new TypeReference<List<BusDepartureDto>>() { });

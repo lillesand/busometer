@@ -12,7 +12,7 @@ import static org.joda.time.DateTime.now;
 public class UpcomingDepartureToDowntown {
 
     public static final String DOWNTOWN_DIRECTION_NAME = "2";
-    public static final String BUS_LINE = "30";
+    public static final String LINE = "5";
 
     private final DateTime expectedDepartureTime;
 
@@ -23,7 +23,7 @@ public class UpcomingDepartureToDowntown {
     private DateTime findNextDepartureInRightDirection(List<BusDepartureDto> departureDtos) {
         Optional<BusDepartureDto> firstDepartingBus = departureDtos.stream()
                 .filter(busDepartureDto -> DOWNTOWN_DIRECTION_NAME.equals(busDepartureDto.getDirectionName()))
-                .filter(busDepartureDto -> BUS_LINE.equals(busDepartureDto.getPublishedLineName()))
+                .filter(busDepartureDto -> LINE.equals(busDepartureDto.getPublishedLineName()))
                 // Minimum expected departing time is the closest bus to leaving
                 .min(Comparator.comparing(BusDepartureDto::getExpectedDepartureTime));
 
